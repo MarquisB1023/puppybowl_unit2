@@ -2,7 +2,7 @@ const playerContainer = document.getElementById('all-players-container');
 const newPlayerFormContainer = document.getElementById('new-player-form');
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
-const cohortName = 'YOUR COHORT NAME HERE';
+const cohortName = '2308-ACC-ET-WEB-PT-B';
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/`;
 
@@ -10,9 +10,18 @@ const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/`;
  * It fetches all players from the API and returns them
  * @returns An array of objects.
  */
+
+const playerId = {
+
+}
+
 const fetchAllPlayers = async () => {
     try {
-
+        const response = await fetch(
+            'https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players'
+          );
+          const result = await response.json();
+          console.log(result);
     } catch (err) {
         console.error('Uh oh, trouble fetching players!', err);
     }
@@ -20,7 +29,11 @@ const fetchAllPlayers = async () => {
 
 const fetchSinglePlayer = async (playerId) => {
     try {
-
+        const response = await fetch(
+            'https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players/1'
+          );
+          const result = await response.json();
+          console.log(result);
     } catch (err) {
         console.error(`Oh no, trouble fetching player #${playerId}!`, err);
     }
@@ -28,7 +41,21 @@ const fetchSinglePlayer = async (playerId) => {
 
 const addNewPlayer = async (playerObj) => {
     try {
-
+        const response = await fetch(
+        'https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: 'Rufus',
+            breed: 'Irish Setter',
+          }),
+        }
+      );
+      const result = await response.json();
+      console.log(result);
     } catch (err) {
         console.error('Oops, something went wrong with adding that player!', err);
     }
@@ -36,7 +63,14 @@ const addNewPlayer = async (playerObj) => {
 
 const removePlayer = async (playerId) => {
     try {
-
+        const response = await fetch(
+            'https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players/1',
+            {
+              method: 'DELETE',
+            }
+          );
+          const result = await response.json();
+          console.log(result);
     } catch (err) {
         console.error(
             `Whoops, trouble removing player #${playerId} from the roster!`,
@@ -80,7 +114,7 @@ const renderAllPlayers = (playerList) => {
  */
 const renderNewPlayerForm = () => {
     try {
-        
+     
     } catch (err) {
         console.error('Uh oh, trouble rendering the new player form!', err);
     }
