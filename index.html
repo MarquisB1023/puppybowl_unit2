@@ -15,16 +15,40 @@
   </head>
 
   <body>
+    <h1>PUPPY BOWL</h1>
+
     <!-- form to add new players -->
     <form id="new-player-form" method="POST">
-      <input
-        type="text"
-        name="playerId"
-        id="playerID"
-        placeholder="player Id"
-      />
-      <input type="text" name="playerName" id="Id" player="player Name" />
-      <input type="text" name="image" placeholder="Image URL" required />
+      <label>
+        Player ID
+        <input
+          type="text"
+          name="playerId"
+          id="playerID"
+          placeholder="player Id"
+        />
+      </label>
+      <label>
+        Player Name
+        <input
+          type="text"
+          name="playerName"
+          id="playerName"
+          placeholderr="player Name"
+        />
+      </label>
+      Breed
+      <input type="text" name="breed" id="breedOfPlayer" placeholder="breed" />
+      <label>
+        Image
+        <input
+          type="text"
+          name="image"
+          id="img"
+          placeholder="Image URL"
+          required
+        />
+      </label>
       <!-- <textarea
         id="identifer"
         name=""
@@ -36,7 +60,7 @@
       ></textarea> -->
       <button type="submit">Add Player</button>
     </form>
-
+  
     <!-- container for all players -->
     <div id="all-players-container">
       <div class="playerCard">
@@ -44,10 +68,10 @@
           src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQgByBT5IiAT_a2x9pUVb4VMoOrlzHH7Jrzj-HB5jzHlR4lNLMS"
           alt=""
         />
-        <h2 class="id">19</h2>
-        <p class="Name">Gibby</p>
-        <p class="breed"></p>
-        <p class="status">on field</p>
+        <p class="id">ID:19</p>
+        <p class="Name">Name:Gibby</p>
+        <p class="breed">Breed:hound mix</p>
+        <p class="status">Status:on field</p>
       </div>
     </div>
   </body>

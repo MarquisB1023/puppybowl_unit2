@@ -1,10 +1,10 @@
+// Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
+const cohortName = `https://fsa-puppy-bowl.herokuapp.com/api/"2308-ACC-ET-WEB-PT-B"`;
+// Use the APIURL variable for fetch requests
+const APIURL = `${cohortName}/players`;
+
 const PLAYERFORM = document.querySelector("form");
 const NEW_PLAYER_CARD = document.querySelector("#all-players-container");
-
-// Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
-const cohortName = "2308-ACC-ET-WEB-PT-B";
-// Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 
 /**
  * It fetches all players from the API and returns them
@@ -14,13 +14,15 @@ const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 PLAYERFORM.addEventListener("submit", async function (event) {
   event.preventDefault();
   const elements = PLAYERFORM.elements;
-  const playerId = elements["Id"].value;
-  const playerName = elements["playerName"].value;
+  const playerId = elements["playerID"];
+  const playerName = elements["playerName"];
+  const breedOfPlayer = elements["breedOfPlayer"];
   const ImgUrl = elements["img"];
 
   const newPlayerData = {
     id: playerId,
     name: playerName,
+    breed: breedOfPlayer,
     image: ImgUrl,
   };
   console.log(newPlayerData);
@@ -28,42 +30,53 @@ PLAYERFORM.addEventListener("submit", async function (event) {
   //   fetchEvents();
 });
 
-const displayPlayer = () => {
-  const NEW_PLAYER_CARD = document.createElement("div");
-  NEW_PLAYER_CARD.classList.add("card");
-  const PLAYER_IMAGE = document.createElement("img");
-  PLAYER_IMAGE.setAttribute("src", result.image_url);
-  const ID_OF_PLAYER = document.createElement("div");
-  ID_OF_PLAYER.classList.add("id");
-  const NAME_OF_PLAYER = document.createElement("p");
-  NAME_OF_PLAYER.classList.add("name");
-  const BREED_OF_PLAYER = document.createElement("p");
-  BREED_OF_PLAYER.classList.add("breed");
-  const STATUS_OF_PLAYER = document.createElement("p");
-  STATUS_OF_PLAYER.classList.add("status");
+const puppyPlayer = [];
 
-  const DELETE_PLAYER = document.createElement("button");
-  DELETE_PLAYER.addEventListener("click", async () => {
-    await removePlayer(result.id);
-    fetchSinglePlayer();
+const displayPlayer = () => {
+  const plArray = puppyPlayer.map((result) => {
+    const PLAYER_BUILD = document.createElement("div");
+    PLAYER_BUILD.classList.add("playercard");
+    const PLAYER_IMAGE = document.createElement("img");
+    PLAYER_IMAGE.setAttribute("src", result.image_url);
+    PLAYER_IMAGE.setAttribute("alt", result.title);
+    const ID_OF_PLAYER = document.createElement("div");
+    ID_OF_PLAYER.classList.add("id");
+    const NAME_OF_PLAYER = document.createElement("p");
+    NAME_OF_PLAYER.classList.add("name");
+    const BREED_OF_PLAYER = document.createElement("p");
+    BREED_OF_PLAYER.classList.add("breed");
+    const STATUS_OF_PLAYER = document.createElement("p");
+    STATUS_OF_PLAYER.classList.add("status");
+
+    const DELETE_PLAYER = document.createElement("button");
+    DELETE_PLAYER.textContent = "Delete";
+    DELETE_PLAYER.addEventListener("click", async () => {
+      await removePlayer(result.id);
+      fetchSinglePlayer();
+    });
+
+    PLAYER_BUILD.append(
+      ID_OF_PLAYER,
+      NAME_OF_PLAYER,
+      PLAYER_IMAGE,
+      BREED_OF_PLAYER,
+      STATUS_OF_PLAYER,
+      DELETE_PLAYER
+    );
+    return PLAYER_BUILD;
   });
-  NEW_PLAYER_CARD.append(
-    NEW_PLAYER_CARD,
-    ID_OF_PLAYER,
-    NAME_OF_PLAYER,
-    LAYER_IMAGE,
-    BREED_OF_PLAYER,
-    STATUS_OF_PLAYER,
-    DELETE_PLAYER
-  );
-  return NEW_PLAYER_CARD;
+  NEW_PLAYER_CARD.PLAYER_BUILD(...plArray);
 };
+function renderingPlayers(players) {
+  PLAYER_BUILD.innerHTML = "";
+  for (const puppy of players) {
+    displayPlayer(puppy);
+  }
+}
 
 const fetchAllPlayers = async () => {
   try {
-    const response = await fetch(
-      "https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players"
-    );
+    const response = await fetch(APIURL);
     const result = await response.json();
     console.log(result);
   } catch (err) {
@@ -73,11 +86,11 @@ const fetchAllPlayers = async () => {
 
 const fetchSinglePlayer = async (playerId) => {
   try {
-    const response = await fetch(
-      "https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players/1"
-    );
+    const response = await fetch(APIURL);
     const result = await response.json();
     console.log(result);
+    const jsonResponse = await response.json();
+    const players = jsonResponse.data;
   } catch (err) {
     console.error(`Oh no, trouble fetching player #${playerId}!`, err);
   }
@@ -85,19 +98,17 @@ const fetchSinglePlayer = async (playerId) => {
 
 const addNewPlayer = async (playerObj) => {
   try {
-    const response = await fetch(
-      "https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Rufus",
-          breed: "Irish Setter",
-        }),
-      }
-    );
+    const response = await fetch(APIURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: "Rufus",
+        breed: "Irish Setter",
+        body: JSON.stringify(playerObj),
+      }),
+    });
     const result = await response.json();
     console.log(result);
   } catch (err) {
@@ -110,12 +121,9 @@ const addNewPlayer = async (playerObj) => {
 
 const removePlayer = async (playerId) => {
   try {
-    const response = await fetch(
-      "https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B/players/1",
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`${APIUR}/${playerId}`, {
+      method: "DELETE",
+    });
     const result = await response.json();
     console.log(result);
   } catch (err) {

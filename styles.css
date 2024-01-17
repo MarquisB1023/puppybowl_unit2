@@ -1,23 +1,36 @@
-form {
+h1{
     display: block;
     text-align: center;
-    
-    padding: 0;
-  }
-
-  #all-players-container {
-    flex: 300px;
-    max-height: 200px;
-    margin: 10px;
-    padding: 10px  20px 10px 20px; 
    
-    text-align: left;
-    position: 30%;
-  }
-  body {
+}
+form {
+  display: block;
+  text-align: center;
+   
+  padding: 0;
+}
 
-    display:block;
-    margin: 0 0 0 0 ;
-     height: 100vh;
-     width: auto;
-    }
+#all-players-container {
+  flex: 300px;
+  max-height: fit-content;
+  width: fit-content;
+  margin: 10px;
+  padding: 20px 20px 10px 20px;
+
+  text-align: left;
+  position: 30%;
+  background-color: white;
+  box-shadow: rgba(188, 187, 187, 0.146) 4px 4px 3px;
+}
+
+img {
+  height: 100px;
+  width: 100px;
+}
+body {
+  display: block;
+  margin: 0 0 0 0;
+  height: 100vh;
+  width: auto;
+   background: radial-gradient(rgb(255, 251, 251),rgb(220, 241, 255));
+}
