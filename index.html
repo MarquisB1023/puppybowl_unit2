@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,13 +16,39 @@
 
   <body>
     <!-- form to add new players -->
-    <div id="new-player-form">
-        <form>
-            
-        </form>
-    </div>
+    <form id="new-player-form" method="POST">
+      <input
+        type="text"
+        name="playerId"
+        id="playerID"
+        placeholder="player Id"
+      />
+      <input type="text" name="playerName" id="Id" player="player Name" />
+      <input type="text" name="image" placeholder="Image URL" required />
+      <!-- <textarea
+        id="identifer"
+        name=""
+        breed=""
+        status=""
+        cols="5"
+        rows="5"
+        required
+      ></textarea> -->
+      <button type="submit">Add Player</button>
+    </form>
 
     <!-- container for all players -->
-    <div id="all-players-container"></div>
+    <div id="all-players-container">
+      <div class="playerCard">
+        <img
+          src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQgByBT5IiAT_a2x9pUVb4VMoOrlzHH7Jrzj-HB5jzHlR4lNLMS"
+          alt=""
+        />
+        <h2 class="id">19</h2>
+        <p class="Name">Gibby</p>
+        <p class="breed"></p>
+        <p class="status">on field</p>
+      </div>
+    </div>
   </body>
 </html>
