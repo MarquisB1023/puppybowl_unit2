@@ -80,12 +80,10 @@ function renderingPlayers(players) {
   const container = document.querySelector("#all-players-container");
   container.innerHTML = "";
   if (Array.isArray(players)) {
-    for (const puppy of players) disyplayPlayer(puppy);
+    for (const puppy of players) displayPlayer(puppy);
+    container.appendChild(playerCard);
   } else {
-    displayPlayer(players);
-  }
-  {
-    const playerCard = displayPlayer(puppy);
+    const playerCard = displayPlayer(players);
     container.appendChild(playerCard);
   }
 }
@@ -182,11 +180,11 @@ fetchSinglePlayer();
 //   }
 // };
 
-const init = async () => {
-  await PLAYER_BUILD();
-  renderAllPlayers(players);
+// const init = async () => {
+//   await PLAYER_BUILD();
+//   renderAllPlayers(players);
 
-  renderNewPlayerForm();
-};
+//   renderNewPlayerForm();
+// };
 
-init();
+// init();
