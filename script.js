@@ -1,9 +1,9 @@
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
-const cohortName = `https://fsa-puppy-bowl.herokuapp.com/api/"2308-ACC-ET-WEB-PT-B"`;
+const cohortName = `https://fsa-puppy-bowl.herokuapp.com/api/2308-ACC-ET-WEB-PT-B`;
 // Use the APIURL variable for fetch requests
 const APIURL = `${cohortName}/players`;
 
-const PLAYERFORM = document.querySelector("form");
+const PLAYERFORM = document.querySelector("#new-player-form");
 const NEW_PLAYER_CARD = document.querySelector("#all-players-container");
 
 /**
@@ -14,10 +14,10 @@ const NEW_PLAYER_CARD = document.querySelector("#all-players-container");
 PLAYERFORM.addEventListener("submit", async function (event) {
   event.preventDefault();
   const elements = PLAYERFORM.elements;
-  const playerId = elements["playerID"];
-  const playerName = elements["playerName"];
-  const breedOfPlayer = elements["breedOfPlayer"];
-  const ImgUrl = elements["img"];
+  const playerId = elements["playerID"].value;
+  const playerName = elements["playerName"].value;
+  const breedOfPlayer = elements["breedOfPlayer"].value;
+  const ImgUrl = elements["img"].value;
 
   const newPlayerData = {
     id: playerId,
@@ -27,50 +27,66 @@ PLAYERFORM.addEventListener("submit", async function (event) {
   };
   console.log(newPlayerData);
   await addNewPlayer(newPlayerData);
+  await fetchAllPlayers();
   //   fetchEvents();
 });
 
 const puppyPlayer = [];
 
-const displayPlayer = () => {
-  const plArray = puppyPlayer.map((result) => {
-    const PLAYER_BUILD = document.createElement("div");
-    PLAYER_BUILD.classList.add("playercard");
-    const PLAYER_IMAGE = document.createElement("img");
-    PLAYER_IMAGE.setAttribute("src", result.image_url);
-    PLAYER_IMAGE.setAttribute("alt", result.title);
-    const ID_OF_PLAYER = document.createElement("div");
-    ID_OF_PLAYER.classList.add("id");
-    const NAME_OF_PLAYER = document.createElement("p");
-    NAME_OF_PLAYER.classList.add("name");
-    const BREED_OF_PLAYER = document.createElement("p");
-    BREED_OF_PLAYER.classList.add("breed");
-    const STATUS_OF_PLAYER = document.createElement("p");
-    STATUS_OF_PLAYER.classList.add("status");
+const displayPlayer = (result) => {
+  const PLAYER_BUILD = document.createElement("div");
+  PLAYER_BUILD.classList.add("playerCard");
 
-    const DELETE_PLAYER = document.createElement("button");
-    DELETE_PLAYER.textContent = "Delete";
-    DELETE_PLAYER.addEventListener("click", async () => {
-      await removePlayer(result.id);
-      fetchSinglePlayer();
-    });
+  const PLAYER_IMAGE = document.createElement("img");
+  PLAYER_IMAGE.setAttribute("src", result.image);
+  PLAYER_IMAGE.setAttribute("alt", result.name);
 
-    PLAYER_BUILD.append(
-      ID_OF_PLAYER,
-      NAME_OF_PLAYER,
-      PLAYER_IMAGE,
-      BREED_OF_PLAYER,
-      STATUS_OF_PLAYER,
-      DELETE_PLAYER
-    );
-    return PLAYER_BUILD;
+  const ID_OF_PLAYER = document.createElement("p");
+  ID_OF_PLAYER.classList.add("id");
+  ID_OF_PLAYER.textContent = `ID: ${result.id}`;
+
+  const NAME_OF_PLAYER = document.createElement("p");
+  NAME_OF_PLAYER.classList.add("Name");
+  NAME_OF_PLAYER.textContent = `Name: ${result.name}`;
+
+  const BREED_OF_PLAYER = document.createElement("p");
+  BREED_OF_PLAYER.classList.add("breed");
+  BREED_OF_PLAYER.textContent = `Breed: ${result.breed}`;
+
+  const STATUS_OF_PLAYER = document.createElement("p");
+  STATUS_OF_PLAYER.classList.add("status");
+  STATUS_OF_PLAYER.textContent = `Status: ${result.status}`;
+
+  const DELETE_PLAYER = document.createElement("button");
+  DELETE_PLAYER.textContent = "Delete";
+  DELETE_PLAYER.addEventListener("click", async () => {
+    await removePlayer(result.id);
+    fetchAllPlayers();
   });
-  NEW_PLAYER_CARD.PLAYER_BUILD(...plArray);
+
+  PLAYER_BUILD.append(
+    PLAYER_IMAGE,
+    ID_OF_PLAYER,
+    NAME_OF_PLAYER,
+    BREED_OF_PLAYER,
+    STATUS_OF_PLAYER,
+    DELETE_PLAYER
+  );
+
+  return PLAYER_BUILD;
 };
+
 function renderingPlayers(players) {
-  PLAYER_BUILD.innerHTML = "";
-  for (const puppy of players) {
-    displayPlayer(puppy);
+  const container = document.querySelector("#all-players-container");
+  container.innerHTML = "";
+  if (Array.isArray(players)) {
+    for (const puppy of players) disyplayPlayer(puppy);
+  } else {
+    displayPlayer(players);
+  }
+  {
+    const playerCard = displayPlayer(puppy);
+    container.appendChild(playerCard);
   }
 }
 
@@ -78,62 +94,56 @@ const fetchAllPlayers = async () => {
   try {
     const response = await fetch(APIURL);
     const result = await response.json();
-    console.log(result);
+    renderingPlayers(result);
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
   }
 };
 
-const fetchSinglePlayer = async (playerId) => {
+const fetchSinglePlayer = async (players) => {
   try {
     const response = await fetch(APIURL);
     const result = await response.json();
     console.log(result);
-    const jsonResponse = await response.json();
-    const players = jsonResponse.data;
   } catch (err) {
-    console.error(`Oh no, trouble fetching player #${playerId}!`, err);
+    console.error(`Oh no, trouble fetching player #${players}!`, err);
   }
 };
 
-const addNewPlayer = async (playerObj) => {
+const addNewPlayer = async (players) => {
   try {
     const response = await fetch(APIURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        name: "Rufus",
-        breed: "Irish Setter",
-        body: JSON.stringify(playerObj),
-      }),
+      body: JSON.stringify(players),
     });
-    const result = await response.json();
+    const result = await response.json(players);
     console.log(result);
   } catch (err) {
     console.error(
-      `Oops, something went wrong with adding that #${playerObj}`,
+      `Oops, something went wrong with adding that #${players}!`,
       err
     );
   }
 };
 
-const removePlayer = async (playerId) => {
+const removePlayer = async (players) => {
   try {
-    const response = await fetch(`${APIUR}/${playerId}`, {
+    const response = await fetch(APIURL, {
       method: "DELETE",
     });
     const result = await response.json();
     console.log(result);
   } catch (err) {
     console.error(
-      `Whoops, trouble removing player #${playerId} from the roster!`,
+      `Whoops, trouble removing player #${players} from the roster!`,
       err
     );
   }
 };
-
+fetchSinglePlayer();
 /**
  * It takes an array of player objects, loops through them, and creates a string of HTML for each
  * player, then adds that string to a larger string of HTML that represents all the players.
@@ -172,11 +182,11 @@ const removePlayer = async (playerId) => {
 //   }
 // };
 
-// const init = async () => {
-//   const players = await fetchAllPlayers();
-//   renderAllPlayers(players);
+const init = async () => {
+  await PLAYER_BUILD();
+  renderAllPlayers(players);
 
-//   renderNewPlayerForm();
-// };
+  renderNewPlayerForm();
+};
 
-// init();
+init();
