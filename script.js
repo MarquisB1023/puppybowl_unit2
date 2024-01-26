@@ -38,7 +38,7 @@ const displayPlayer = (result) => {
   PLAYER_BUILD.classList.add("playerCard");
 
   const PLAYER_IMAGE = document.createElement("img");
-  PLAYER_IMAGE.setAttribute("src", result.image);
+  PLAYER_IMAGE.setAttribute("src", result.imageUrl);
   PLAYER_IMAGE.setAttribute("alt", result.name);
 
   const ID_OF_PLAYER = document.createElement("p");
@@ -77,22 +77,25 @@ const displayPlayer = (result) => {
 };
 
 function renderingPlayers(players) {
+  console.log(players);
   const container = document.querySelector("#all-players-container");
   container.innerHTML = "";
-  if (Array.isArray(players)) {
-    for (const puppy of players) displayPlayer(puppy);
-    container.appendChild(playerCard);
-  } else {
-    const playerCard = displayPlayer(players);
+  for (const puppy of players) {
+    const playerCard = displayPlayer(puppy);
     container.appendChild(playerCard);
   }
+  console.log(container);
+  //   } else {
+  //     const playerCard = displayPlayer(players);
+  //     container.appendChild(playerCard);
+  //   }
 }
 
 const fetchAllPlayers = async () => {
   try {
     const response = await fetch(APIURL);
     const result = await response.json();
-    renderingPlayers(result);
+    renderingPlayers(result.data.players);
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
   }
@@ -129,7 +132,7 @@ const addNewPlayer = async (players) => {
 
 const removePlayer = async (players) => {
   try {
-    const response = await fetch(APIURL, {
+    const response = await fetch(APIURL + `/${players}`, {
       method: "DELETE",
     });
     const result = await response.json();
@@ -141,7 +144,7 @@ const removePlayer = async (players) => {
     );
   }
 };
-fetchSinglePlayer();
+fetchAllPlayers();
 /**
  * It takes an array of player objects, loops through them, and creates a string of HTML for each
  * player, then adds that string to a larger string of HTML that represents all the players.
